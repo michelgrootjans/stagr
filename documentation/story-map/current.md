@@ -6,7 +6,6 @@ kanban-plugin: board
 
 ## Todo
 
-- [ ] Dev screen (`/dev`) — simulated player panels, connected to server
 - [ ] Deploy to Heroku — app accessible via public URL
 
 ## Busy
@@ -16,6 +15,7 @@ kanban-plugin: board
 ## Done
 
 - [x] Player connects on mobile phone (joins via URL, sees hello world + connection status)
+- [x] Dev screen (`/dev`) — simulated player panels, connected to server
 
 
 ***
