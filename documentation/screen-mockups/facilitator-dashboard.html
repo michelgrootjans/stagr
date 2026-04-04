@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stagr — Facilitator Dashboard</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body class="facilitator-screen">
+  <nav class="screen-nav">
+    <a class="home" href="index.html">↩ All screens</a>
+    <span class="screen-name">Facilitator — Dashboard</span>
+    <div class="flow-links">
+      <a href="facilitator-hiring.html">→ Trigger hiring</a>
+    </div>
+  </nav>
+
+  <!-- Facilitator header bar -->
+  <div class="facilitator-header">
+    <h1>Stagr · Round 1 · Day 4 of 10</h1>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span style="font-size:12px; color:#5c5f66;">Round:</span>
+      <a class="f-btn active">1</a>
+      <a class="f-btn ghost">2</a>
+      <a class="f-btn ghost">3</a>
+      <div style="width:1px; height:20px; background:#2c2e33; margin:0 4px;"></div>
+      <a href="facilitator-hiring.html" class="f-btn ghost">Hire</a>
+      <a class="f-btn danger">End Round</a>
+    </div>
+  </div>
+
+  <!-- 4-panel layout -->
+  <div class="panels">
+
+    <!-- Panel 1: Kanban board (tall left column) -->
+    <div class="panel" style="grid-row: 1 / 3;">
+      <div class="panel-title">Kanban Board</div>
+      <div class="kanban">
+
+        <div class="kanban-col">
+          <div class="kanban-col-title">Backlog <span class="kanban-col-count">3</span></div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="card-title">Artist profile page</div>
+              <div class="card-meta">
+                <span class="badge frontend" style="font-size:10px;">Frontend</span>
+                <span class="badge analysis" style="font-size:10px;">Analysis</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="card-title">Payment gateway</div>
+              <div class="card-meta">
+                <span class="badge backend" style="font-size:10px;">Backend</span>
+                <span class="badge security" style="font-size:10px;">Security</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="card-title">Push notifications</div>
+              <div class="card-meta">
+                <span class="badge backend" style="font-size:10px;">Backend</span>
+                <span class="badge infra" style="font-size:10px;">Infra</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-title">In Progress <span class="kanban-col-count">3</span></div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="card-title">Implement login API</div>
+              <div class="card-meta">
+                <span class="badge backend" style="font-size:10px;">Backend</span>
+              </div>
+              <div class="card-meta" style="margin-top:5px;">
+                <span class="assignee">Senior Backend</span>
+                <span class="assignee">Junior Backend</span>
+              </div>
+            </div>
+            <div class="kanban-card blocked">
+              <div class="card-title">Venue search API</div>
+              <div class="card-meta">
+                <span class="badge backend" style="font-size:10px;">Backend</span>
+              </div>
+              <div class="card-meta" style="margin-top:5px;">
+                <span class="assignee">Mid Backend</span>
+                <span style="font-size:10px; color:#fa5252;">⚠ Blocked</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="card-title">Deploy to staging</div>
+              <div class="card-meta">
+                <span class="badge infra" style="font-size:10px;">Infra</span>
+              </div>
+              <div class="card-meta" style="margin-top:5px;">
+                <span class="assignee">Junior Infra</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-title">Done <span class="kanban-col-count">3</span></div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="card-title">Database schema</div>
+              <div class="card-meta">
+                <span class="badge backend" style="font-size:10px;">Backend</span>
+                <span class="badge analysis" style="font-size:10px;">Analysis</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="card-title">API documentation</div>
+              <div class="card-meta">
+                <span class="badge analysis" style="font-size:10px;">Analysis</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="card-title">CI/CD pipeline</div>
+              <div class="card-meta">
+                <span class="badge infra" style="font-size:10px;">Infra</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Panel 2: CFD -->
+    <div class="panel">
+      <div class="panel-title">Cumulative Flow Diagram</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 300 150" preserveAspectRatio="none">
+          <!-- Axes -->
+          <line x1="30" y1="10" x2="30" y2="130" stroke="#2c2e33" stroke-width="1"/>
+          <line x1="30" y1="130" x2="295" y2="130" stroke="#2c2e33" stroke-width="1"/>
+          <!-- Backlog area (gray) -->
+          <polygon points="30,130 30,50 75,55 120,58 165,62 210,65 255,68 295,70 295,130"
+            fill="#3d4147" opacity="0.8"/>
+          <!-- In Progress area (blue) -->
+          <polygon points="30,130 30,80 75,78 120,76 165,75 210,74 255,72 295,70 295,130"
+            fill="#1864ab" opacity="0.7"/>
+          <!-- Done area (green) -->
+          <polygon points="30,130 30,130 75,120 120,110 165,100 210,90 255,80 295,70 295,130"
+            fill="#2b8a3e" opacity="0.8"/>
+          <!-- Day markers -->
+          <text x="30" y="143" fill="#5c5f66" font-size="9" text-anchor="middle">1</text>
+          <text x="75" y="143" fill="#5c5f66" font-size="9" text-anchor="middle">2</text>
+          <text x="120" y="143" fill="#5c5f66" font-size="9" text-anchor="middle">3</text>
+          <text x="165" y="143" fill="#5c5f66" font-size="9" text-anchor="middle">4</text>
+          <text x="210" y="143" fill="#5c5f66" font-size="9" text-anchor="middle">5</text>
+          <text x="255" y="143" fill="#5c5f66" font-size="9" text-anchor="middle">6</text>
+          <!-- Y labels -->
+          <text x="25" y="133" fill="#5c5f66" font-size="8" text-anchor="end">0</text>
+          <text x="25" y="83" fill="#5c5f66" font-size="8" text-anchor="end">4</text>
+          <text x="25" y="33" fill="#5c5f66" font-size="8" text-anchor="end">8</text>
+          <!-- Legend -->
+          <rect x="40" y="14" width="8" height="8" fill="#2b8a3e"/>
+          <text x="52" y="21" fill="#909296" font-size="8">Done</text>
+          <rect x="80" y="14" width="8" height="8" fill="#1864ab"/>
+          <text x="92" y="21" fill="#909296" font-size="8">In Progress</text>
+          <rect x="140" y="14" width="8" height="8" fill="#3d4147"/>
+          <text x="152" y="21" fill="#909296" font-size="8">Backlog</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Panel 3: Cycle time scatter -->
+    <div class="panel">
+      <div class="panel-title">Cycle Time Scatter</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 300 150" preserveAspectRatio="none">
+          <!-- Axes -->
+          <line x1="30" y1="10" x2="30" y2="130" stroke="#2c2e33" stroke-width="1"/>
+          <line x1="30" y1="130" x2="295" y2="130" stroke="#2c2e33" stroke-width="1"/>
+          <!-- Reference line: 85th percentile -->
+          <line x1="30" y1="55" x2="295" y2="55" stroke="#495057" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="297" y="58" fill="#5c5f66" font-size="8">85%</text>
+          <!-- Dots -->
+          <circle cx="75"  cy="110" r="4" fill="#4dabf7" opacity="0.8"/>
+          <circle cx="100" cy="95"  r="4" fill="#4dabf7" opacity="0.8"/>
+          <circle cx="130" cy="100" r="4" fill="#4dabf7" opacity="0.8"/>
+          <circle cx="155" cy="85"  r="4" fill="#4dabf7" opacity="0.8"/>
+          <circle cx="170" cy="40"  r="4" fill="#fa5252" opacity="0.8"/>
+          <circle cx="195" cy="90"  r="4" fill="#4dabf7" opacity="0.8"/>
+          <circle cx="220" cy="80"  r="4" fill="#4dabf7" opacity="0.8"/>
+          <circle cx="245" cy="75"  r="4" fill="#4dabf7" opacity="0.8"/>
+          <!-- Axis labels -->
+          <text x="162" y="143" fill="#5c5f66" font-size="9" text-anchor="middle">Completion day →</text>
+          <text x="10" y="75" fill="#5c5f66" font-size="8" text-anchor="middle" transform="rotate(-90 10 75)">Days</text>
+          <text x="25" y="133" fill="#5c5f66" font-size="8" text-anchor="end">0</text>
+          <text x="25" y="83"  fill="#5c5f66" font-size="8" text-anchor="end">3</text>
+          <text x="25" y="33"  fill="#5c5f66" font-size="8" text-anchor="end">6</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

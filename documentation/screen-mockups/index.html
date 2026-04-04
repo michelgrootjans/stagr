@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stagr — Screen Mockups</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    body { background: #1a1b1e; color: #c1c2c5; min-height: 100vh; }
+    .index-wrap { max-width: 680px; margin: 0 auto; padding: 48px 24px; }
+    .index-wrap h1 { color: white; font-size: 28px; margin: 0 0 6px; }
+    .subtitle { color: #5c5f66; margin-bottom: 40px; font-size: 15px; }
+    h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #5c5f66; margin: 32px 0 10px; }
+    ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; }
+    ul a {
+      display: flex; align-items: center; gap: 12px; padding: 13px 16px;
+      background: #25262b; border: 1px solid #2c2e33; border-radius: 8px;
+      text-decoration: none; color: #c1c2c5; font-size: 15px;
+    }
+    ul a:hover { background: #2c2e33; color: white; border-color: #3d59a1; }
+    .screen-icon { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
+    .screen-info { flex: 1; }
+    .screen-desc { font-size: 12px; color: #5c5f66; margin-top: 2px; }
+    .arrow { color: #5c5f66; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="index-wrap">
+    <h1>Stagr</h1>
+    <p class="subtitle">Screen mockups — click any screen to explore the flow</p>
+
+    <h2>Player screens (phone)</h2>
+    <ul>
+      <li><a href="lobby.html">
+        <span class="screen-icon">🚪</span>
+        <div class="screen-info">
+          <div>Lobby / Join</div>
+          <div class="screen-desc">Scan QR code, receive character, wait for game to start</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+      <li><a href="player-main.html">
+        <span class="screen-icon">🎲</span>
+        <div class="screen-info">
+          <div>Main screen</div>
+          <div class="screen-desc">Character, current task, tap to roll, mood, roll history</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+      <li><a href="player-standup.html">
+        <span class="screen-icon">📋</span>
+        <div class="screen-info">
+          <div>Standup</div>
+          <div class="screen-desc">Pick a task, choose to collaborate</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+      <li><a href="player-waiting.html">
+        <span class="screen-icon">⏳</span>
+        <div class="screen-info">
+          <div>Waiting (after roll)</div>
+          <div class="screen-desc">Mood flavour text, prompt to look at the shared screen</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+      <li><a href="player-character-details.html">
+        <span class="screen-icon">👤</span>
+        <div class="screen-info">
+          <div>Character details</div>
+          <div class="screen-desc">Full dot grid per skill, happiness history</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+      <li><a href="player-candidate.html">
+        <span class="screen-icon">🤝</span>
+        <div class="screen-info">
+          <div>Hiring — candidate view</div>
+          <div class="screen-desc">Own dot grid visible during the interview</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+    </ul>
+
+    <h2>Facilitator screens (large display)</h2>
+    <ul>
+      <li><a href="facilitator-dashboard.html">
+        <span class="screen-icon">📊</span>
+        <div class="screen-info">
+          <div>Dashboard</div>
+          <div class="screen-desc">Kanban board, CFD, cycle time scatter plot, histogram</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+      <li><a href="facilitator-hiring.html">
+        <span class="screen-icon">📱</span>
+        <div class="screen-info">
+          <div>Hiring overlay</div>
+          <div class="screen-desc">QR code for candidates, team skill coverage</div>
+        </div>
+        <span class="arrow">→</span>
+      </a></li>
+    </ul>
+  </div>
+</body>
+</html>

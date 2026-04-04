@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stagr — Lobby</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body class="phone-screen">
+  <nav class="screen-nav">
+    <a class="home" href="index.html">↩ All screens</a>
+    <span class="screen-name">Lobby / Join</span>
+    <div class="flow-links">
+      <a href="player-main.html">→ Game starts</a>
+    </div>
+  </nav>
+
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>Stagr</span>
+      <span>●●●●</span>
+    </div>
+    <div class="content">
+
+      <div style="text-align: center; padding: 24px 0 16px;">
+        <p style="font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Welcome to</p>
+        <h1 style="font-size: 32px; font-weight: 800; margin: 0 0 4px; letter-spacing: -1px;">Stagr</h1>
+        <p style="color: var(--muted); font-size: 14px;">Round 1 — Team Alpha</p>
+      </div>
+
+      <hr>
+
+      <div class="section-label">Your character</div>
+      <div style="background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px;">
+        <div class="mood-row">
+          <div>
+            <h2 style="font-size: 20px; margin-bottom: 2px;">Alex</h2>
+            <p style="color: var(--muted); font-size: 14px; margin-bottom: 8px;">Senior Backend</p>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <span class="badge backend">Backend ●●●●●●●</span>
+              <span class="badge frontend">Frontend ●●●</span>
+            </div>
+          </div>
+          <div class="mood-circle happy">😊</div>
+        </div>
+      </div>
+
+      <div style="background: #fff9db; border: 1px solid #ffe066; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #5c4b00; margin-bottom: 14px;">
+        Your dot grid is visible only to you. Answer questions honestly during the interview.
+      </div>
+
+      <hr>
+
+      <div style="text-align: center; padding: 12px 0;">
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 16px;">Waiting for the facilitator to start the game...</p>
+        <div style="display: inline-flex; gap: 6px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary); display: inline-block; animation: pulse 1.2s ease-in-out infinite;"></span>
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary); display: inline-block; animation: pulse 1.2s ease-in-out infinite 0.2s;"></span>
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary); display: inline-block; animation: pulse 1.2s ease-in-out infinite 0.4s;"></span>
+        </div>
+        <p style="margin-top: 12px; font-size: 13px; color: #adb5bd;">5 players joined</p>
+      </div>
+
+    </div>
+  </div>
+
+  <style>
+    @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  </style>
+</body>
+</html>

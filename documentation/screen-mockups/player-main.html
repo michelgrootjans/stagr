@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stagr — Player: Main</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body class="phone-screen">
+  <nav class="screen-nav">
+    <a class="home" href="index.html">↩ All screens</a>
+    <span class="screen-name">Player — Main</span>
+    <div class="flow-links">
+      <a href="player-standup.html">→ Standup</a>
+      <a href="player-waiting.html">→ After roll</a>
+      <a href="player-character-details.html">→ Character</a>
+    </div>
+  </nav>
+
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>Stagr · Day 4</span>
+      <span>●●●●</span>
+    </div>
+    <div class="content">
+
+      <!-- Character header -->
+      <a href="player-character-details.html" style="text-decoration: none; color: inherit;">
+        <div class="mood-row" style="margin-bottom: 4px;">
+          <div>
+            <h2 style="font-size: 22px; margin-bottom: 2px;">Alex</h2>
+            <p style="color: var(--muted); font-size: 14px;">Senior Backend</p>
+          </div>
+          <div class="mood-circle happy">😊</div>
+        </div>
+      </a>
+
+      <hr>
+
+      <!-- Current task -->
+      <div class="section-label">Current task</div>
+      <p style="font-size: 15px; margin-bottom: 6px; font-weight: 500;">Implement login API</p>
+      <span class="badge backend">Backend</span>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: 58%;"></div>
+      </div>
+      <p class="muted">7 of 12 dots remaining</p>
+
+      <hr>
+
+      <!-- Roll button -->
+      <a href="player-waiting.html" class="big-btn">TAP TO ROLL</a>
+
+      <hr>
+
+      <!-- Roll history -->
+      <div class="section-label" style="margin-bottom: 8px;">Recent rolls</div>
+      <div class="roll-row">
+        <div class="roll-pip high">11</div>
+        <div class="roll-pip">6</div>
+        <div class="roll-pip high">9</div>
+        <div class="roll-pip low">3</div>
+        <div class="roll-pip">7</div>
+      </div>
+
+      <hr>
+
+      <!-- Mood flavour -->
+      <p class="muted" style="font-style: italic; line-height: 1.6;">
+        Feeling sharp today — the pieces are coming together.
+      </p>
+
+    </div>
+  </div>
+</body>
+</html>

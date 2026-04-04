@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stagr — Facilitator: Hiring</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .hiring-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+      background: #2c2e33;
+      height: calc(100vh - 88px);
+    }
+    .hiring-panel {
+      background: #1a1b1e; padding: 20px;
+      display: flex; flex-direction: column; gap: 16px;
+      overflow-y: auto;
+    }
+    .candidate-card {
+      background: #25262b; border: 1px solid #2c2e33; border-radius: 8px;
+      padding: 14px;
+    }
+    .candidate-card h3 { color: white; margin: 0 0 4px; font-size: 15px; }
+    .skill-row { display: flex; justify-content: space-between; align-items: center; margin: 4px 0; font-size: 12px; color: #909296; }
+    .skill-bar-track { flex: 1; height: 6px; background: #2c2e33; border-radius: 3px; margin: 0 10px; }
+    .skill-bar-fill  { height: 100%; border-radius: 3px; }
+    .team-need { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2c2e33; font-size: 13px; }
+    .team-need:last-child { border-bottom: none; }
+    .need-label { color: #c1c2c5; }
+    .need-bar { display: flex; gap: 3px; }
+    .need-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .need-dot.filled { background: #4dabf7; }
+    .need-dot.empty  { background: #2c2e33; }
+    .decision-btn {
+      padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer;
+      font-size: 14px; font-weight: 600; width: 100%;
+    }
+  </style>
+</head>
+<body class="facilitator-screen">
+  <nav class="screen-nav">
+    <a class="home" href="index.html">↩ All screens</a>
+    <span class="screen-name">Facilitator — Hiring</span>
+    <div class="flow-links">
+      <a class="back" href="facilitator-dashboard.html">← Dashboard</a>
+      <a href="player-candidate.html">→ Candidate's phone</a>
+    </div>
+  </nav>
+
+  <div class="facilitator-header">
+    <h1>Stagr · Hiring Round</h1>
+    <div style="display:flex; gap:8px;">
+      <a href="facilitator-dashboard.html" class="f-btn ghost">Cancel hiring</a>
+    </div>
+  </div>
+
+  <div class="hiring-layout">
+
+    <!-- Column 1: QR code -->
+    <div class="hiring-panel" style="align-items: center; justify-content: center; text-align: center;">
+      <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #5c5f66; margin: 0;">Scan to join as candidate</p>
+
+      <!-- QR code placeholder -->
+      <div style="
+        width: 180px; height: 180px; border: 3px solid #495057; border-radius: 10px;
+        background: white; display: flex; align-items: center; justify-content: center;
+        color: #adb5bd; font-size: 12px; position: relative; overflow: hidden;
+      ">
+        <!-- Fake QR pattern -->
+        <svg viewBox="0 0 100 100" width="160" height="160">
+          <rect x="5" y="5" width="30" height="30" fill="none" stroke="#343a40" stroke-width="3"/>
+          <rect x="10" y="10" width="20" height="20" fill="#343a40"/>
+          <rect x="65" y="5" width="30" height="30" fill="none" stroke="#343a40" stroke-width="3"/>
+          <rect x="70" y="10" width="20" height="20" fill="#343a40"/>
+          <rect x="5" y="65" width="30" height="30" fill="none" stroke="#343a40" stroke-width="3"/>
+          <rect x="10" y="70" width="20" height="20" fill="#343a40"/>
+          <rect x="40" y="5"  width="5" height="5" fill="#343a40"/>
+          <rect x="50" y="5"  width="5" height="5" fill="#343a40"/>
+          <rect x="45" y="10" width="5" height="5" fill="#343a40"/>
+          <rect x="40" y="15" width="5" height="5" fill="#343a40"/>
+          <rect x="55" y="15" width="5" height="5" fill="#343a40"/>
+          <rect x="40" y="40" width="5" height="5" fill="#343a40"/>
+          <rect x="50" y="40" width="5" height="5" fill="#343a40"/>
+          <rect x="60" y="40" width="5" height="5" fill="#343a40"/>
+          <rect x="45" y="50" width="5" height="5" fill="#343a40"/>
+          <rect x="55" y="50" width="5" height="5" fill="#343a40"/>
+          <rect x="40" y="60" width="5" height="5" fill="#343a40"/>
+          <rect x="60" y="60" width="5" height="5" fill="#343a40"/>
+          <rect x="65" y="45" width="5" height="5" fill="#343a40"/>
+          <rect x="75" y="45" width="5" height="5" fill="#343a40"/>
+          <rect x="70" y="55" width="5" height="5" fill="#343a40"/>
+          <rect x="80" y="55" width="5" height="5" fill="#343a40"/>
+          <rect x="65" y="65" width="5" height="5" fill="#343a40"/>
+          <rect x="75" y="70" width="5" height="5" fill="#343a40"/>
+          <rect x="85" y="65" width="5" height="5" fill="#343a40"/>
+        </svg>
+      </div>
+
+      <p style="color: #4dabf7; font-size: 15px; font-weight: 600; letter-spacing: 1px; margin: 0;">stagr.game/join/WAVE-42</p>
+      <p style="color: #5c5f66; font-size: 13px; margin: 0;">2 candidates connected</p>
+    </div>
+
+    <!-- Column 2: Candidates -->
+    <div class="hiring-panel">
+      <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #5c5f66; margin: 0;">Candidates</p>
+
+      <div class="candidate-card">
+        <h3>Sam</h3>
+        <p style="color: #5c5f66; font-size: 12px; margin: 0 0 12px;">Connected — ready to interview</p>
+        <p style="color: #909296; font-size: 11px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Known skills (self-reported)</p>
+        <div class="skill-row">
+          <span style="width:70px;" class="badge backend" style="font-size:10px;">Backend</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:40%; background:#4dabf7;"></div></div>
+          <span>4</span>
+        </div>
+        <div class="skill-row">
+          <span style="width:70px;" class="badge frontend" style="font-size:10px;">Frontend</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:70%; background:#ffa94d;"></div></div>
+          <span>7</span>
+        </div>
+        <div class="skill-row">
+          <span style="width:70px;" class="badge analysis" style="font-size:10px;">Analysis</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:60%; background:#cc5de8;"></div></div>
+          <span>6</span>
+        </div>
+        <p style="color: #5c5f66; font-size: 11px; margin-top: 8px;">Infrastructure and Security not disclosed</p>
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <button class="decision-btn" style="background: var(--primary); color: white;">Hire Sam</button>
+          <button class="decision-btn" style="background: #2c2e33; color: #909296;">Pass</button>
+        </div>
+      </div>
+
+      <div class="candidate-card" style="opacity: 0.6;">
+        <h3>Jordan</h3>
+        <p style="color: #5c5f66; font-size: 12px; margin: 0;">Connected — interview pending</p>
+      </div>
+
+      <button class="decision-btn" style="background: #2c2e33; color: #5c5f66; margin-top: auto;">
+        Hire nobody — leave role open
+      </button>
+    </div>
+
+    <!-- Column 3: Team skill coverage -->
+    <div class="hiring-panel">
+      <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #5c5f66; margin: 0;">Current team coverage</p>
+      <p style="color: #909296; font-size: 12px; margin: 0;">What the team needs most</p>
+
+      <div>
+        <div class="team-need">
+          <span class="need-label">Frontend</span>
+          <div class="need-bar">
+            <div class="need-dot filled"></div><div class="need-dot filled"></div>
+            <div class="need-dot filled"></div><div class="need-dot empty"></div>
+            <div class="need-dot empty"></div>
+          </div>
+          <span style="color: #fa5252; font-size: 12px; margin-left: 10px;">Low</span>
+        </div>
+        <div class="team-need">
+          <span class="need-label">Security</span>
+          <div class="need-bar">
+            <div class="need-dot filled"></div><div class="need-dot filled"></div>
+            <div class="need-dot empty"></div><div class="need-dot empty"></div>
+            <div class="need-dot empty"></div>
+          </div>
+          <span style="color: #fa5252; font-size: 12px; margin-left: 10px;">Low</span>
+        </div>
+        <div class="team-need">
+          <span class="need-label">Analysis</span>
+          <div class="need-bar">
+            <div class="need-dot filled"></div><div class="need-dot filled"></div>
+            <div class="need-dot filled"></div><div class="need-dot empty"></div>
+            <div class="need-dot empty"></div>
+          </div>
+          <span style="color: #ffa94d; font-size: 12px; margin-left: 10px;">Med</span>
+        </div>
+        <div class="team-need">
+          <span class="need-label">Backend</span>
+          <div class="need-bar">
+            <div class="need-dot filled"></div><div class="need-dot filled"></div>
+            <div class="need-dot filled"></div><div class="need-dot filled"></div>
+            <div class="need-dot empty"></div>
+          </div>
+          <span style="color: #69db7c; font-size: 12px; margin-left: 10px;">OK</span>
+        </div>
+        <div class="team-need">
+          <span class="need-label">Infra</span>
+          <div class="need-bar">
+            <div class="need-dot filled"></div><div class="need-dot filled"></div>
+            <div class="need-dot filled"></div><div class="need-dot filled"></div>
+            <div class="need-dot filled"></div>
+          </div>
+          <span style="color: #69db7c; font-size: 12px; margin-left: 10px;">Good</span>
+        </div>
+      </div>
+
+      <div style="background: #25262b; border: 1px solid #2c2e33; border-radius: 8px; padding: 12px; font-size: 12px; color: #909296; margin-top: auto;">
+        The team can see this panel. The candidates cannot.
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

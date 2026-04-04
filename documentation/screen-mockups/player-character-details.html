@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stagr — Character Details</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body class="phone-screen">
+  <nav class="screen-nav">
+    <a class="home" href="index.html">↩ All screens</a>
+    <span class="screen-name">Player — Character Details</span>
+    <div class="flow-links">
+      <a class="back" href="player-main.html">← Back</a>
+    </div>
+  </nav>
+
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>Stagr · Day 4</span>
+      <span>●●●●</span>
+    </div>
+    <div class="content">
+
+      <!-- Character header -->
+      <div class="mood-row" style="margin-bottom: 4px;">
+        <div>
+          <h2 style="font-size: 20px; margin-bottom: 2px;">Alex</h2>
+          <p style="color: var(--muted); font-size: 14px;">Senior Backend</p>
+        </div>
+        <div class="mood-circle happy">😊</div>
+      </div>
+
+      <hr>
+
+      <!-- Skill dot grids -->
+      <div class="section-label" style="margin-bottom: 12px;">Skill dots</div>
+
+      <div class="skill-section">
+        <div class="skill-header">
+          <span class="badge backend">Backend</span>
+          <span class="muted">7 / 10</span>
+        </div>
+        <div class="dot-grid" id="grid-backend"></div>
+      </div>
+
+      <div class="skill-section">
+        <div class="skill-header">
+          <span class="badge frontend">Frontend</span>
+          <span class="muted">3 / 10</span>
+        </div>
+        <div class="dot-grid" id="grid-frontend"></div>
+      </div>
+
+      <div class="skill-section">
+        <div class="skill-header">
+          <span class="badge infra">Infrastructure</span>
+          <span class="muted">4 / 10</span>
+        </div>
+        <div class="dot-grid" id="grid-infra"></div>
+      </div>
+
+      <div class="skill-section">
+        <div class="skill-header">
+          <span class="badge security">Security</span>
+          <span class="muted">2 / 10</span>
+        </div>
+        <div class="dot-grid" id="grid-security"></div>
+      </div>
+
+      <div class="skill-section">
+        <div class="skill-header">
+          <span class="badge analysis">Analysis</span>
+          <span class="muted">5 / 10</span>
+        </div>
+        <div class="dot-grid" id="grid-analysis"></div>
+      </div>
+
+      <hr>
+
+      <!-- Happiness history -->
+      <div class="section-label" style="margin-bottom: 10px;">Happiness history</div>
+      <div style="display: flex; align-items: flex-end; gap: 5px; height: 48px;">
+        <div style="flex:1; background:#69db7c; height:80%; border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1; background:#69db7c; height:75%; border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1; background:#ffa94d; height:45%; border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1; background:#ffa94d; height:40%; border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1; background:#69db7c; height:70%; border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1; background:#69db7c; height:90%; border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1; background:#69db7c; height:95%; border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1; background:#69db7c; height:100%; border-radius:3px 3px 0 0;"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:4px;">
+        <span class="muted" style="font-size:11px;">Day 1</span>
+        <span class="muted" style="font-size:11px;">Day 8</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function makeDots(id, total, known) {
+      const grid = document.getElementById(id);
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot ' + (i < known ? 'on' : 'dim');
+        grid.appendChild(dot);
+      }
+    }
+    makeDots('grid-backend',  10, 7);
+    makeDots('grid-frontend', 10, 3);
+    makeDots('grid-infra',    10, 4);
+    makeDots('grid-security', 10, 2);
+    makeDots('grid-analysis', 10, 5);
+  </script>
+</body>
+</html>
