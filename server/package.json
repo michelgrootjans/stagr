@@ -1,0 +1,21 @@
+{
+  "name": "@stagr/server",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/infrastructure/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/infrastructure/server.ts",
+    "start": "node dist/infrastructure/server.js"
+  },
+  "dependencies": {
+    "@stagr/shared": "*",
+    "socket.io": "^4.8.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^22.0.0"
+  }
+}
