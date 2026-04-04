@@ -21,10 +21,9 @@ Progress for the day = sum of the dice roll, modified by:
 - **Zero known dots**: possible but very slow, with added probability of quality damage
 - **Collaboration**: both players' dice pools contribute, split across the shared task proportionally to skill
 
-## Streaks and Feel
+## Feelings
 
-The dramatic reveal is designed to make lucky and unlucky streaks felt:
-- A streak indicator shows recent roll results
+The dramatic reveal is designed to make lucky and unlucky rolls felt:
 - A skilled player rolling badly feels the frustration
 - A junior player rolling a surprise high number creates a moment for the team
 
