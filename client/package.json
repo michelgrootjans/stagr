@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@stagr/shared": "*",
+		"@sveltejs/adapter-static": "^3.0.10",
 		"socket.io-client": "^4.8.0"
 	},
 	"devDependencies": {

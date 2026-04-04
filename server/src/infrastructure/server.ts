@@ -1,8 +1,13 @@
 import { createServer } from 'http'
 import { randomUUID } from 'crypto'
+import { join } from 'path'
+import sirv from 'sirv'
 import { Server } from 'socket.io'
 
-const httpServer = createServer()
+const clientBuildPath = join(process.cwd(), 'client', 'build')
+const serve = sirv(clientBuildPath, { single: true })
+
+const httpServer = createServer((req, res) => serve(req, res))
 const io = new Server(httpServer, {
   cors: { origin: '*' }
 })
@@ -22,7 +27,7 @@ io.on('connection', (socket) => {
   })
 })
 
-const PORT = 3000
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000
 httpServer.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
