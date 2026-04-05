@@ -4,13 +4,15 @@
   "workspaces": [
     "shared",
     "server",
-    "client"
+    "client",
+    "e2e"
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "npm run build -w shared && npm run build -w client && npm run build -w server",
     "start": "NODE_ENV=production node server/dist/infrastructure/server.js",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "e2e": "npm test -w e2e"
   },
   "engines": {
     "node": "24.x"
