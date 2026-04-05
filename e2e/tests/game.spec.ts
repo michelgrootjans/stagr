@@ -46,9 +46,9 @@ test('two players join a game and the facilitator sees them connect', async ({ b
 
   await test.step('John joins the game', () => john.joinsGame(gameId))
 
-  await john.sees('his character name and skills', async (page) => {
+  await john.sees('his character name and the Product Owner role', async (page) => {
     await expect(page.locator('.character-name')).toBeVisible()
-    await expect(page.locator('.skills li').first()).toBeVisible()
+    await expect(page.locator('.role-label')).toHaveText('Product Owner')
   })
 
   await facilitator.sees('John connected in the lobby', async (page) => {
@@ -57,9 +57,9 @@ test('two players join a game and the facilitator sees them connect', async ({ b
 
   await test.step('Mary joins the game', () => mary.joinsGame(gameId))
 
-  await mary.sees('her character name and skills', async (page) => {
+  await mary.sees('her character name and the Developer role', async (page) => {
     await expect(page.locator('.character-name')).toBeVisible()
-    await expect(page.locator('.skills li').first()).toBeVisible()
+    await expect(page.locator('.role-label')).toHaveText('Developer')
   })
 
   await facilitator.sees('John and Mary both connected', async (page) => {

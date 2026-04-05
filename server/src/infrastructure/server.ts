@@ -7,14 +7,17 @@ import { createCommandBus } from '../application/createCommandBus'
 import { CreateGame } from '../application/commands/CreateGame'
 import { JoinGame } from '../application/commands/JoinGame'
 import { AssignTask } from '../application/commands/AssignTask'
-import { StartWork } from '../application/commands/StartWork'
+import { ReadyTask } from '../application/commands/ReadyTask'
+import { StartRound } from '../application/commands/StartRound'
 import { AdvanceDay } from '../application/commands/AdvanceDay'
 import { RecordAction } from '../application/commands/RecordAction'
-import type { Character, Task, GamePhase } from '../domain/Game'
+import type { Character, GamePhase, PlayerRole } from '../domain/Game'
 import { InMemoryGameRepository } from './InMemoryGameRepository'
+import { GetPlayerGameHandler } from '../application/queries/GetPlayerGameHandler'
 
 const gameRepository = new InMemoryGameRepository()
 const bus = createCommandBus(gameRepository)
+const getPlayerGame = new GetPlayerGameHandler(gameRepository)
 
 const isDev = process.env.NODE_ENV !== 'production'
 const httpServer = isDev
@@ -31,8 +34,9 @@ const io = new Server(httpServer, {
 type PlayerRef = { gameId: string; playerId: string }
 const socketToPlayer = new Map<string, PlayerRef>()
 
-type PlayerStatus = { id: string; name: string; connected: boolean; assignedTaskId: string | undefined; hasActed: boolean }
-type GameUpdate = { phase: GamePhase; effortCount: number; tasks: Task[]; players: PlayerStatus[] }
+type TaskStatus = { id: string; name: string; requiredSkill: string; remainingEffort: number; ready: boolean }
+type PlayerStatus = { id: string; name: string; role: PlayerRole; connected: boolean; assignedTaskId: string | undefined; hasActed: boolean }
+type GameUpdate = { phase: GamePhase; effortCount: number; tasks: TaskStatus[]; players: PlayerStatus[] }
 
 function gameUpdate(gameId: string): GameUpdate {
   const game = gameRepository.findById(gameId)
@@ -41,13 +45,15 @@ function gameUpdate(gameId: string): GameUpdate {
       .filter(ref => ref.gameId === gameId)
       .map(ref => ref.playerId)
   )
+  const readyIds = new Set(game?.getReadyTasks().map(t => t.id) ?? [])
   return {
-    phase: game?.getPhase() ?? 'standup',
+    phase: game?.getPhase() ?? 'lobby',
     effortCount: game?.getEffortCount() ?? 0,
-    tasks: game?.tasks ?? [],
+    tasks: (game?.tasks ?? []).map(t => ({ ...t, ready: readyIds.has(t.id) })),
     players: (game?.players ?? []).map(id => ({
       id,
       name: game?.getCharacter(id)?.name ?? id,
+      role: game?.getRole(id) ?? 'developer',
       connected: connectedIds.has(id),
       assignedTaskId: game?.getAssignment(id),
       hasActed: game?.hasActed(id) ?? false,
@@ -87,6 +93,13 @@ io.on('connection', (socket) => {
     console.log(`Player ${playerId} rejoined game ${gameId}`)
   })
 
+  socket.on('ready_task', ({ taskId }: { taskId: string }) => {
+    const ref = socketToPlayer.get(socket.id)
+    if (!ref) return
+    bus.execute(new ReadyTask(ref.gameId, taskId))
+    io.to(ref.gameId).emit('game_updated', gameUpdate(ref.gameId))
+  })
+
   socket.on('assign_task', ({ taskId }: { taskId: string }) => {
     const ref = socketToPlayer.get(socket.id)
     if (!ref) return
@@ -94,14 +107,17 @@ io.on('connection', (socket) => {
     io.to(ref.gameId).emit('game_updated', gameUpdate(ref.gameId))
   })
 
-  socket.on('start_work', ({ gameId }: { gameId: string }) => {
-    bus.execute(new StartWork(gameId))
+  socket.on('start_round', ({ gameId }: { gameId: string }) => {
+    bus.execute(new StartRound(gameId))
     io.to(gameId).emit('game_updated', gameUpdate(gameId))
   })
 
-  socket.on('advance_day', ({ gameId }: { gameId: string }) => {
-    bus.execute(new AdvanceDay(gameId))
-    io.to(gameId).emit('game_updated', gameUpdate(gameId))
+  socket.on('advance_day', () => {
+    const ref = socketToPlayer.get(socket.id)
+    if (!ref) return
+    if (gameRepository.findById(ref.gameId)?.getRole(ref.playerId) !== 'product-owner') return
+    bus.execute(new AdvanceDay(ref.gameId))
+    io.to(ref.gameId).emit('game_updated', gameUpdate(ref.gameId))
   })
 
   socket.on('player_action', () => {
@@ -109,6 +125,10 @@ io.on('connection', (socket) => {
     if (!ref) return
     bus.execute(new RecordAction(ref.gameId, ref.playerId))
     io.to(ref.gameId).emit('game_updated', gameUpdate(ref.gameId))
+  })
+
+  socket.on('get_player_game', ({ playerId }: { playerId: string }, callback: (gameId: string | undefined) => void) => {
+    callback(getPlayerGame.handle(playerId))
   })
 
   socket.on('watch_game', ({ gameId }: { gameId: string }) => {

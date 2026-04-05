@@ -12,6 +12,10 @@ export class InMemoryGameRepository implements GameRepository {
     return this.games.get(gameId)
   }
 
+  findByPlayerId(playerId: string): Game | undefined {
+    return [...this.games.values()].find(g => g.players.includes(playerId))
+  }
+
   findAll(): Game[] {
     return [...this.games.values()]
   }

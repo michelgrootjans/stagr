@@ -5,15 +5,15 @@
   import QRCode from 'qrcode'
 
   type Task = { id: string; name: string; requiredSkill: string; remainingEffort: number }
-  type GamePhase = 'standup' | 'work'
-  type Player = { id: string; name: string; connected: boolean; assignedTaskId: string | undefined; hasActed: boolean }
+  type GamePhase = 'lobby' | 'active'
+  type Player = { id: string; name: string; role: string; connected: boolean; assignedTaskId: string | undefined; hasActed: boolean }
   type GameState = { phase: GamePhase; effortCount: number; tasks: Task[]; players: Player[] }
 
   const gameId = $page.params.gameId
   const joinUrl = `${window.location.origin}/games/${gameId}/join`
 
   let connected = $state(false)
-  let phase = $state<GamePhase>('standup')
+  let phase = $state<GamePhase>('active')
   let players = $state<Player[]>([])
   let tasks = $state<Task[]>([])
   let effortCount = $state(0)
@@ -33,16 +33,11 @@
     })
   }
 
-  function startWork() {
-    socket.emit('start_work', { gameId })
+  function startRound() {
+    socket.emit('start_round', { gameId })
   }
 
-  function advanceDay() {
-    socket.emit('advance_day', { gameId })
-  }
-
-  const taskMap = $derived(new Map(tasks.map(t => [t.id, t])))
-  const allActed = $derived(players.length > 0 && players.every(p => p.hasActed))
+const taskMap = $derived(new Map(tasks.map(t => [t.id, t])))
 
   onMount(async () => {
     qrDataUrl = await QRCode.toDataURL(joinUrl, { width: 200, margin: 1 })
@@ -70,12 +65,8 @@
   <p>Server: {connected ? '🟢 connected' : '🔴 disconnected'}</p>
   <p>Phase: <strong>{phase}</strong> — Effort: {effortCount}</p>
 
-  {#if phase === 'standup'}
-    <button onclick={startWork} disabled={players.length === 0}>Start work</button>
-  {:else}
-    <button onclick={advanceDay}>
-      {allActed ? 'Next day' : 'Advance day'}
-    </button>
+  {#if phase === 'lobby'}
+    <button onclick={startRound} disabled={players.length === 0}>Start round</button>
   {/if}
 
   <h2>Players ({players.length})</h2>
@@ -86,13 +77,13 @@
       {#each players as player}
         <li>
           {player.connected ? '🟢' : '🔴'}
-          {player.name}
+          {player.name}{player.role === 'product-owner' ? ' (PO)' : ''}
           {#if player.assignedTaskId}
             — {taskMap.get(player.assignedTaskId)?.name ?? player.assignedTaskId}
-          {:else if phase === 'standup'}
+          {:else if phase === 'active'}
             — <em>no task</em>
           {/if}
-          {#if phase === 'work'}
+          {#if phase === 'active'}
             {player.hasActed ? '✅' : '⏳'}
           {/if}
         </li>

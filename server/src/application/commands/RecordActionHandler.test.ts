@@ -3,24 +3,24 @@ import { RecordAction } from './RecordAction'
 import { RecordActionHandler } from './RecordActionHandler'
 import { CreateGame } from './CreateGame'
 import { JoinGame } from './JoinGame'
-import { StartWork } from './StartWork'
+import { StartRound } from './StartRound'
 import { InMemoryGameRepository } from '../../infrastructure/InMemoryGameRepository'
 import { createCommandBus } from '../createCommandBus'
 
 describe('RecordActionHandler', () => {
-  it('records a player action during the work phase', () => {
+  it('records a player action during standup', () => {
     const repository = new InMemoryGameRepository()
     const bus = createCommandBus(repository)
     bus.execute(new CreateGame('game-1'))
     bus.execute(new JoinGame('game-1', 'player-1'))
-    bus.execute(new StartWork('game-1'))
+    bus.execute(new StartRound('game-1'))
 
     new RecordActionHandler(repository).handle(new RecordAction('game-1', 'player-1'))
 
     expect(repository.findById('game-1')?.getEffortCount()).toBe(1)
   })
 
-  it('ignores an action during standup', () => {
+  it('ignores an action in lobby', () => {
     const repository = new InMemoryGameRepository()
     const bus = createCommandBus(repository)
     bus.execute(new CreateGame('game-1'))

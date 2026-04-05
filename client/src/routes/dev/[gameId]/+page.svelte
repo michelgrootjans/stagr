@@ -10,7 +10,8 @@
   type Skill = { name: string; level: number }
   type Character = { name: string; skills: Skill[] }
   type Player = { id: string; name: string; connected: boolean }
-  type GameState = { effortCount: number; players: Player[] }
+  type GamePhase = 'lobby' | 'active'
+  type GameState = { phase: GamePhase; effortCount: number; players: Player[] }
 
   type PlayerPanel = {
     socket: Socket
@@ -26,10 +27,10 @@
   function applyGameState(game: GameState) {
     players = game.players
     effortCount = game.effortCount
-    const panelPlayerIds = new Set(panels.map(p => p.playerId))
-    game.players
-      .filter(p => !panelPlayerIds.has(p.id))
-      .forEach(p => spawnPanel(p.id))
+    const coveredIds = new Set(panels.map(p => p.playerId).filter(id => id !== null))
+    const pendingCount = panels.filter(p => p.playerId === null).length
+    const unspawned = game.players.filter(p => !coveredIds.has(p.id))
+    unspawned.slice(pendingCount).forEach(p => spawnPanel(p.id))
   }
 
   function watchGame() {
@@ -105,7 +106,13 @@
       {#each panels as panel, i}
         <div class="player-panel">
           <div class="panel-header">
-            <span>Player {i + 1}</span>
+            <span>
+              {#if panel.playerId}
+                <a href="/players/{panel.playerId}" target="_blank">Player {i + 1}</a>
+              {:else}
+                Player {i + 1}
+              {/if}
+            </span>
             <div class="actions">
               <button onclick={() => panel.socket.disconnect()} disabled={!panel.connected}>Disconnect</button>
               <button onclick={() => panel.socket.connect()} disabled={panel.connected}>Reconnect</button>

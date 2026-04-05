@@ -5,6 +5,7 @@
 
   const playerId = $page.params.playerId
   const character = $page.state.character
+  const gameId = $page.state.gameId
 </script>
 
-<PlayerScreen {socket} {playerId} {character} />
+<PlayerScreen {socket} {playerId} {character} {gameId} />
