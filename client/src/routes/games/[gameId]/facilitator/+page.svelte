@@ -2,13 +2,16 @@
   import { onMount, onDestroy } from 'svelte'
   import { page } from '$app/stores'
   import { socket } from '$lib/socket'
+  import QRCode from 'qrcode'
 
   type Player = { id: string; name: string; connected: boolean }
   type GameState = { effortCount: number; players: Player[] }
 
   const gameId = $page.params.gameId
+  const joinUrl = `${window.location.origin}/games/${gameId}/join`
 
   let connected = $state(false)
+  let qrDataUrl = $state('')
   let players = $state<Player[]>([])
   let effortCount = $state(0)
 
@@ -24,7 +27,9 @@
     })
   }
 
-  onMount(() => {
+  onMount(async () => {
+    qrDataUrl = await QRCode.toDataURL(joinUrl, { width: 200, margin: 1 })
+
     connected = socket.connected
     if (socket.connected) watchGame()
 
@@ -63,6 +68,9 @@
     </ul>
   {/if}
 
-  <a href="/games/{gameId}/join">Join game</a>
+  {#if qrDataUrl}
+    <a href={joinUrl}><img src={qrDataUrl} alt="Scan to join the game" width="200" height="200" /></a>
+  {/if}
+
   <a href="/dev/{gameId}">Dev</a>
 </main>
