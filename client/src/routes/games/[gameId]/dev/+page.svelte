@@ -3,6 +3,7 @@
   import { page } from '$app/stores'
   import { serverUrl } from '$lib/socket'
   import { onDestroy } from 'svelte'
+  import PlayerScreen from '$lib/components/PlayerScreen.svelte'
 
   const gameId = $page.params.gameId
 
@@ -49,13 +50,18 @@
   <div class="panels">
     {#each panels as panel, i}
       <div class="player-panel">
-        <h2>Player {i + 1}</h2>
-        <p>{panel.connected ? '🟢 connected' : '🔴 disconnected'}</p>
-        <p class="player-id">{panel.playerId ?? '...'}</p>
-        <div class="actions">
-          <button onclick={() => panel.socket.disconnect()} disabled={!panel.connected}>Disconnect</button>
-          <button onclick={() => panel.socket.connect()} disabled={panel.connected}>Reconnect</button>
+        <div class="panel-header">
+          <span>Player {i + 1}</span>
+          <div class="actions">
+            <button onclick={() => panel.socket.disconnect()} disabled={!panel.connected}>Disconnect</button>
+            <button onclick={() => panel.socket.connect()} disabled={panel.connected}>Reconnect</button>
+          </div>
         </div>
+        {#if panel.playerId}
+          <PlayerScreen socket={panel.socket} playerId={panel.playerId} />
+        {:else}
+          <p class="joining">Joining...</p>
+        {/if}
       </div>
     {/each}
   </div>
@@ -68,10 +74,13 @@
   .panels { display: flex; gap: 16px; }
   .player-panel {
     border: 1px solid #ccc; border-radius: 8px;
-    padding: 16px; width: 200px;
+    overflow: hidden; width: 240px;
   }
-  h2 { margin: 0 0 8px; }
-  p { margin: 4px 0; }
-  .player-id { font-size: 11px; color: #999; word-break: break-all; }
-  .actions { display: flex; gap: 8px; margin-top: 8px; }
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; background: #f5f5f5; border-bottom: 1px solid #ccc;
+    font-weight: bold; font-size: 0.9rem;
+  }
+  .actions { display: flex; gap: 6px; }
+  .joining { padding: 16px; color: #999; margin: 0; }
 </style>
