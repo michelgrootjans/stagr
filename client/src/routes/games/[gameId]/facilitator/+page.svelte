@@ -8,7 +8,8 @@
   let connected = $state(false)
   let players = $state<string[]>([])
 
-  function fetchGame() {
+  function watchGame() {
+    socket.emit('watch_game', { gameId })
     socket.emit('get_game', { gameId }, (game: { players: string[] } | undefined) => {
       if (game) players = game.players
     })
@@ -16,11 +17,11 @@
 
   onMount(() => {
     connected = socket.connected
-    if (socket.connected) fetchGame()
+    if (socket.connected) watchGame()
 
     socket.on('connect', () => {
       connected = true
-      fetchGame()
+      watchGame()
     })
     socket.on('disconnect', () => { connected = false })
     socket.on('game_updated', (game: { players: string[] }) => {

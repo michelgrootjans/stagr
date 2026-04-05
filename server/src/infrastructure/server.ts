@@ -44,6 +44,10 @@ io.on('connection', (socket) => {
     callback(playerId)
   })
 
+  socket.on('watch_game', ({ gameId }: { gameId: string }) => {
+    socket.join(gameId)
+  })
+
   socket.on('get_game', ({ gameId }: { gameId: string }, callback: (game: { players: string[] } | undefined) => void) => {
     callback(getGameHandler.handle(gameId))
   })
