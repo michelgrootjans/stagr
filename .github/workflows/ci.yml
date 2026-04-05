@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Unit tests
-        run: npm test
+        run: npm test -w shared -w server -w client
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
