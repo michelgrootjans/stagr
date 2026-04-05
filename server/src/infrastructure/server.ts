@@ -4,10 +4,14 @@ import { join } from 'path'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
 import { CreateGameHandler } from '../application/commands/CreateGameHandler'
+import { JoinGameHandler } from '../application/commands/JoinGameHandler'
+import { GetGameHandler } from '../application/queries/GetGameHandler'
 import { InMemoryGameRepository } from './InMemoryGameRepository'
 
 const gameRepository = new InMemoryGameRepository()
 const createGameHandler = new CreateGameHandler(gameRepository)
+const joinGameHandler = new JoinGameHandler(gameRepository)
+const getGameHandler = new GetGameHandler(gameRepository)
 
 const isDev = process.env.NODE_ENV !== 'production'
 const httpServer = isDev
@@ -33,8 +37,15 @@ io.on('connection', (socket) => {
   socket.on('join_game', ({ gameId }: { gameId: string }, callback: (playerId: string) => void) => {
     const playerId = randomUUID()
     socket.join(gameId)
+    joinGameHandler.handle(gameId, playerId)
+    const game = gameRepository.findById(gameId)
+    io.to(gameId).emit('game_updated', { players: game?.players ?? [] })
     console.log(`Player ${playerId} joined game ${gameId}`)
     callback(playerId)
+  })
+
+  socket.on('get_game', ({ gameId }: { gameId: string }, callback: (game: { players: string[] } | undefined) => void) => {
+    callback(getGameHandler.handle(gameId))
   })
 
   socket.on('disconnect', () => {

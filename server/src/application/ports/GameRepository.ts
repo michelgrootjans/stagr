@@ -1,3 +1,6 @@
+import type { Game } from '../../domain/Game'
+
 export interface GameRepository {
-  save(gameId: string): void
+  save(game: Game): void
+  findById(gameId: string): Game | undefined
 }

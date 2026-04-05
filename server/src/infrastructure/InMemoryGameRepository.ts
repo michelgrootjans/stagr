@@ -1,9 +1,14 @@
 import type { GameRepository } from '../application/ports/GameRepository'
+import type { Game } from '../domain/Game'
 
 export class InMemoryGameRepository implements GameRepository {
-  private readonly games = new Set<string>()
+  private readonly games = new Map<string, Game>()
 
-  save(gameId: string): void {
-    this.games.add(gameId)
+  save(game: Game): void {
+    this.games.set(game.id, game)
+  }
+
+  findById(gameId: string): Game | undefined {
+    return this.games.get(gameId)
   }
 }
