@@ -5,6 +5,7 @@
   let connected = $state(false)
 
   onMount(() => {
+    connected = socket.connected
     socket.on('connect', () => { connected = true })
     socket.on('disconnect', () => { connected = false })
   })

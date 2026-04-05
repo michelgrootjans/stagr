@@ -1,2 +1,15 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+  import { goto } from '$app/navigation'
+  import { socket } from '$lib/socket'
+
+  function startNewGame() {
+    socket.emit('create_game', (gameId: string) => {
+      goto(`/games/${gameId}/facilitator`)
+    })
+  }
+</script>
+
+<main>
+  <h1>Stagr</h1>
+  <button onclick={startNewGame}>Start new game</button>
+</main>

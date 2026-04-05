@@ -16,6 +16,7 @@ kanban-plugin: board
 
 - [x] Player connects on mobile phone (joins via URL, sees hello world + connection status)
 - [x] Dev screen (`/dev`) — simulated player panels, connected to server
+- [x] Index page — "Start new game" button creates a game and redirects to facilitator screen
 
 
 ***

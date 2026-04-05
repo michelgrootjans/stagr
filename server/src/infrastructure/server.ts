@@ -3,17 +3,32 @@ import { randomUUID } from 'crypto'
 import { join } from 'path'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
+import { CreateGameHandler } from '../application/commands/CreateGameHandler'
+import { InMemoryGameRepository } from './InMemoryGameRepository'
 
-const clientBuildPath = join(process.cwd(), 'client', 'build')
-const serve = sirv(clientBuildPath, { single: true })
+const gameRepository = new InMemoryGameRepository()
+const createGameHandler = new CreateGameHandler(gameRepository)
 
-const httpServer = createServer((req, res) => serve(req, res))
+const isDev = process.env.NODE_ENV !== 'production'
+const httpServer = isDev
+  ? createServer()
+  : (() => {
+      const clientBuildPath = join(process.cwd(), 'client', 'build')
+      const serve = sirv(clientBuildPath, { single: true })
+      return createServer((req, res) => serve(req, res))
+    })()
 const io = new Server(httpServer, {
   cors: { origin: '*' }
 })
 
 io.on('connection', (socket) => {
   console.log(`Client connected: ${socket.id}`)
+
+  socket.on('create_game', (callback: (gameId: string) => void) => {
+    const gameId = randomUUID()
+    createGameHandler.handle(gameId)
+    callback(gameId)
+  })
 
   socket.on('join_game', ({ gameId }: { gameId: string }, callback: (playerId: string) => void) => {
     const playerId = randomUUID()
