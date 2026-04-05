@@ -12,7 +12,8 @@
     "build": "npm run build -w shared && npm run build -w client && npm run build -w server",
     "start": "NODE_ENV=production node server/dist/infrastructure/server.js",
     "test": "npm run test --workspaces --if-present",
-    "e2e": "npm test -w e2e"
+    "e2e": "npm test -w e2e",
+    "e2e:headed": "SLOW_MO=500 npm test -w e2e -- --headed"
   },
   "engines": {
     "node": "24.x"
