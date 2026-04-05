@@ -1,18 +1,15 @@
 import { describe, it, expect } from 'vitest'
 import { JoinGameHandler } from './JoinGameHandler'
-import { Game } from '../../domain/Game'
+import { CreateGameHandler } from './CreateGameHandler'
+import { InMemoryGameRepository } from '../../infrastructure/InMemoryGameRepository'
 
 describe('JoinGameHandler', () => {
   it('adds the player to the game', () => {
-    const game = new Game('game-1')
-    const repository = {
-      save: (_game: Game) => {},
-      findById: (_gameId: string) => game
-    }
+    const repository = new InMemoryGameRepository()
+    new CreateGameHandler(repository).handle('game-1')
 
-    const handler = new JoinGameHandler(repository)
-    handler.handle('game-1', 'player-1')
+    new JoinGameHandler(repository).handle('game-1', 'player-1')
 
-    expect(game.players).toContain('player-1')
+    expect(repository.findById('game-1')?.players).toContain('player-1')
   })
 })
