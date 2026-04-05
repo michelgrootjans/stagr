@@ -1,15 +1,17 @@
 import { describe, it, expect } from 'vitest'
 import { GetGameHandler } from './GetGameHandler'
-import { CreateGameHandler } from '../commands/CreateGameHandler'
-import { JoinGameHandler } from '../commands/JoinGameHandler'
+import { CreateGame } from '../commands/CreateGame'
+import { JoinGame } from '../commands/JoinGame'
 import { InMemoryGameRepository } from '../../infrastructure/InMemoryGameRepository'
+import { createCommandBus } from '../createCommandBus'
 
 describe('GetGameHandler', () => {
   it('returns the current state of the game', () => {
     const repository = new InMemoryGameRepository()
-    new CreateGameHandler(repository).handle('game-1')
-    new JoinGameHandler(repository).handle('game-1', 'player-1')
-    new JoinGameHandler(repository).handle('game-1', 'player-2')
+    const bus = createCommandBus(repository)
+    bus.execute(new CreateGame('game-1'))
+    bus.execute(new JoinGame('game-1', 'player-1'))
+    bus.execute(new JoinGame('game-1', 'player-2'))
 
     const result = new GetGameHandler(repository).handle('game-1')
 

@@ -3,13 +3,13 @@ import { randomUUID } from 'crypto'
 import { join } from 'path'
 import sirv from 'sirv'
 import { Server } from 'socket.io'
-import { CreateGameHandler } from '../application/commands/CreateGameHandler'
-import { JoinGameHandler } from '../application/commands/JoinGameHandler'
+import { createCommandBus } from '../application/createCommandBus'
+import { CreateGame } from '../application/commands/CreateGame'
+import { JoinGame } from '../application/commands/JoinGame'
 import { InMemoryGameRepository } from './InMemoryGameRepository'
 
 const gameRepository = new InMemoryGameRepository()
-const createGameHandler = new CreateGameHandler(gameRepository)
-const joinGameHandler = new JoinGameHandler(gameRepository)
+const bus = createCommandBus(gameRepository)
 
 const isDev = process.env.NODE_ENV !== 'production'
 const httpServer = isDev
@@ -45,14 +45,14 @@ io.on('connection', (socket) => {
 
   socket.on('create_game', (callback: (gameId: string) => void) => {
     const gameId = randomUUID()
-    createGameHandler.handle(gameId)
+    bus.execute(new CreateGame(gameId))
     callback(gameId)
   })
 
   socket.on('join_game', ({ gameId }: { gameId: string }, callback: (playerId: string) => void) => {
     const playerId = randomUUID()
     socket.join(gameId)
-    joinGameHandler.handle(gameId, playerId)
+    bus.execute(new JoinGame(gameId, playerId))
     socketToPlayer.set(socket.id, { gameId, playerId })
     io.to(gameId).emit('game_updated', gameUpdate(gameId))
     console.log(`Player ${playerId} joined game ${gameId}`)
