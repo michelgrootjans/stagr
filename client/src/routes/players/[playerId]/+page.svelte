@@ -4,6 +4,7 @@
   import PlayerScreen from '$lib/components/PlayerScreen.svelte'
 
   const playerId = $page.params.playerId
+  const character = $page.state.character
 </script>
 
-<PlayerScreen {socket} {playerId} />
+<PlayerScreen {socket} {playerId} {character} />

@@ -7,9 +7,13 @@
 
   const gameId = $page.params.gameId
 
+  type Skill = { name: string; level: number }
+  type Character = { name: string; skills: Skill[] }
+
   type PlayerPanel = {
     socket: Socket
     playerId: string | null
+    character: Character | null
     connected: boolean
   }
 
@@ -18,13 +22,14 @@
   function addPlayer() {
     const socket = io(serverUrl, { forceNew: true })
     const index = panels.length
-    panels = [...panels, { socket, playerId: null, connected: false }]
+    panels = [...panels, { socket, playerId: null, character: null, connected: false }]
 
     socket.on('connect', () => {
       panels[index].connected = true
       if (!panels[index].playerId) {
-        socket.emit('join_game', { gameId }, (playerId: string) => {
+        socket.emit('join_game', { gameId }, ({ playerId, character }: { playerId: string; character: Character }) => {
           panels[index].playerId = playerId
+          panels[index].character = character
         })
       } else {
         socket.emit('rejoin_game', { gameId, playerId: panels[index].playerId })
@@ -58,7 +63,7 @@
           </div>
         </div>
         {#if panel.playerId}
-          <PlayerScreen socket={panel.socket} playerId={panel.playerId} />
+          <PlayerScreen socket={panel.socket} playerId={panel.playerId} character={panel.character ?? undefined} />
         {:else}
           <p class="joining">Joining...</p>
         {/if}

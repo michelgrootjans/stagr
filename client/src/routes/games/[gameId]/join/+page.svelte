@@ -8,8 +8,8 @@
 
   onMount(() => {
     const join = () => {
-      socket.emit('join_game', { gameId }, (playerId: string) => {
-        goto(`/players/${playerId}`)
+      socket.emit('join_game', { gameId }, ({ playerId, character }: { playerId: string; character: unknown }) => {
+        goto(`/players/${playerId}`, { state: { character } })
       })
     }
 

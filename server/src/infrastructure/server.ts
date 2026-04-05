@@ -6,6 +6,7 @@ import { Server } from 'socket.io'
 import { createCommandBus } from '../application/createCommandBus'
 import { CreateGame } from '../application/commands/CreateGame'
 import { JoinGame } from '../application/commands/JoinGame'
+import type { Character } from '../domain/Game'
 import { InMemoryGameRepository } from './InMemoryGameRepository'
 
 const gameRepository = new InMemoryGameRepository()
@@ -49,14 +50,15 @@ io.on('connection', (socket) => {
     callback(gameId)
   })
 
-  socket.on('join_game', ({ gameId }: { gameId: string }, callback: (playerId: string) => void) => {
+  socket.on('join_game', ({ gameId }: { gameId: string }, callback: (result: { playerId: string; character: Character | undefined }) => void) => {
     const playerId = randomUUID()
     socket.join(gameId)
     bus.execute(new JoinGame(gameId, playerId))
     socketToPlayer.set(socket.id, { gameId, playerId })
     io.to(gameId).emit('game_updated', gameUpdate(gameId))
+    const character = gameRepository.findById(gameId)?.getCharacter(playerId)
     console.log(`Player ${playerId} joined game ${gameId}`)
-    callback(playerId)
+    callback({ playerId, character })
   })
 
   socket.on('rejoin_game', ({ gameId, playerId }: { gameId: string; playerId: string }) => {
