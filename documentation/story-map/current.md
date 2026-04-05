@@ -6,7 +6,6 @@ kanban-plugin: board
 
 ## Todo
 
-- [ ] Deploy to Heroku — app accessible via public URL
 
 ## Busy
 
@@ -17,6 +16,7 @@ kanban-plugin: board
 - [x] Player connects on mobile phone (joins via URL, sees hello world + connection status)
 - [x] Dev screen (`/games/:gameId/dev`) — simulated player panels, connected to server
 - [x] Index page — "Start new game" button creates a game and redirects to facilitator screen
+- [x] Deploy to Heroku — app accessible via public URL
 
 
 ***
