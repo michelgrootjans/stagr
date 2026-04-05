@@ -1,3 +1,5 @@
 .claude
 .idea
 .obsidian
+.mcp.json
+.playwright-mcp/
