@@ -127,7 +127,8 @@ The client receives game state from the server via Socket.io and renders it. It 
 ```
 client/src/
   routes/
-    facilitator/     ← /facilitator
+    games/[gameId]/
+      facilitator/   ← /games/:gameId/facilitator
     play/[sessionId] ← /play/:sessionId
     join/[sessionId] ← /join/:sessionId
     dev/             ← /dev

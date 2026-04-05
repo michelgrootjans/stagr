@@ -26,7 +26,7 @@ kanban-plugin: board
 - [x] `shared`: TypeScript package with build setup, no content yet
 - [x] `server`: Node.js + TypeScript + Socket.io — starts, accepts connections, joins a room
 - [x] `client`: SvelteKit + TypeScript — Socket.io client configured, connects to server
-- [x] `/facilitator` route: Hello World page showing server connection status
+- [x] `/games/:gameId/facilitator` route: Hello World page showing server connection status
 - [x] Dev scripts: single command starts both server and client
 
 %% kanban:settings

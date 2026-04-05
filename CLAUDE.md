@@ -47,6 +47,8 @@ Socket.io events push **full game state** to all clients after commands. Targete
 
 Tests live alongside the code they test (`Character.ts` / `Character.test.ts`). Tests describe behaviour, not implementation.
 
+Always run the full test suite with `npm test` from the root (runs all workspaces), never a single file or test.
+
 ## Story map
 
 `/documentation/story-map/current.md` — active tasks
@@ -59,7 +61,7 @@ Always update `current.md` when a task is completed — move it to Done without 
 
 | Route | Description |
 |---|---|
-| `/facilitator` | Facilitator screen |
+| `/games/:gameId/facilitator` | Facilitator screen |
 | `/games/:gameId/join` | Entry point (QR code target), redirects to player screen |
 | `/players/:playerId` | Player's personal screen |
 | `/dev` | Dev mode — simulated player panels |
