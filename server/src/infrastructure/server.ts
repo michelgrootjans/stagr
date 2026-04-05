@@ -53,7 +53,12 @@ io.on('connection', (socket) => {
   socket.on('create_game', (callback: (gameId: string) => void) => {
     const gameId = randomUUID()
     bus.execute(new CreateGame(gameId))
+    io.emit('games_updated', gameRepository.findAll().map(g => g.id))
     callback(gameId)
+  })
+
+  socket.on('get_games', (callback: (gameIds: string[]) => void) => {
+    callback(gameRepository.findAll().map(g => g.id))
   })
 
   socket.on('join_game', ({ gameId }: { gameId: string }, callback: (result: { playerId: string; character: Character | undefined }) => void) => {

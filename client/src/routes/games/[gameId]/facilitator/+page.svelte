@@ -64,5 +64,5 @@
   {/if}
 
   <a href="/games/{gameId}/join">Join game</a>
-  <a href="/games/{gameId}/dev">Dev</a>
+  <a href="/dev/{gameId}">Dev</a>
 </main>
