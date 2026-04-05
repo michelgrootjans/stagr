@@ -5,6 +5,7 @@ export interface TaskView {
   id: string
   name: string
   requiredSkill: string
+  totalEffort: number
   remainingEffort: number
   ready: boolean
 }

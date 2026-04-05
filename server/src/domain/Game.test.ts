@@ -87,7 +87,10 @@ describe('Game', () => {
   it('records a player action during standup', () => {
     const game = new Game('game-1')
     game.addPlayer('player-1')
+    const taskId = game.tasks[0].id
+    game.readyTask(taskId)
     game.startRound()
+    game.assignTask('player-1', taskId)
 
     game.recordAction('player-1')
 
@@ -95,15 +98,78 @@ describe('Game', () => {
     expect(game.getEffortCount()).toBe(1)
   })
 
+  it('reduces remaining effort on the assigned task when a player taps', () => {
+    const game = new Game('game-1')
+    game.addPlayer('player-1')
+    game.addPlayer('player-2')
+    const task = game.tasks[0] // remainingEffort: 5
+    game.readyTask(task.id)
+    game.startRound()
+    game.assignTask('player-2', task.id)
+
+    game.recordAction('player-2')
+
+    expect(game.tasks.find(t => t.id === task.id)?.remainingEffort).toBe(4)
+  })
+
+  it('removes a task from the ready list when its effort reaches zero', () => {
+    const game = new Game('game-1')
+    game.addPlayer('player-1') // PO
+    game.addPlayer('player-2') // developer
+    const task = game.tasks.find(t => t.remainingEffort === 3)! // task-4 or task-5
+    game.readyTask(task.id)
+    game.startRound()
+    game.assignTask('player-2', task.id)
+
+    for (let i = 0; i < 3; i++) {
+      game.advanceDay()
+      game.recordAction('player-2')
+    }
+
+    expect(game.getReadyTasks().find(t => t.id === task.id)).toBeUndefined()
+  })
+
   it('ignores a second action from the same player in one day', () => {
     const game = new Game('game-1')
     game.addPlayer('player-1')
+    const taskId = game.tasks[0].id
+    game.readyTask(taskId)
     game.startRound()
+    game.assignTask('player-1', taskId)
     game.recordAction('player-1')
 
     game.recordAction('player-1')
 
     expect(game.getEffortCount()).toBe(1)
+  })
+
+  it('clears the assignment for all players when a task is completed', () => {
+    const game = new Game('game-1')
+    game.addPlayer('player-1') // PO
+    game.addPlayer('player-2') // developer
+    game.addPlayer('player-3') // developer
+    const task = game.tasks.find(t => t.remainingEffort === 3)!
+    game.readyTask(task.id)
+    game.startRound()
+    game.assignTask('player-2', task.id)
+    game.assignTask('player-3', task.id)
+
+    for (let i = 0; i < 3; i++) {
+      game.advanceDay()
+      game.recordAction('player-2')
+    }
+
+    expect(game.getAssignment('player-3')).toBeUndefined()
+  })
+
+  it('ignores an action when the player has no assigned task', () => {
+    const game = new Game('game-1')
+    game.addPlayer('player-1')
+    game.startRound()
+
+    game.recordAction('player-1')
+
+    expect(game.getEffortCount()).toBe(0)
   })
 
   it('ignores an action in lobby', () => {
@@ -120,7 +186,13 @@ describe('Game', () => {
     game.addPlayer('player-1') // PO
     game.addPlayer('player-2') // developer
     game.addPlayer('player-3') // developer
+    const task1 = game.tasks[0].id
+    const task2 = game.tasks[1].id
+    game.readyTask(task1)
+    game.readyTask(task2)
     game.startRound()
+    game.assignTask('player-2', task1)
+    game.assignTask('player-3', task2)
 
     expect(game.allDevelopersActed()).toBe(false)
     game.recordAction('player-2')
@@ -132,7 +204,10 @@ describe('Game', () => {
   it('returns to active and clears acted state after advancing the day', () => {
     const game = new Game('game-1')
     game.addPlayer('player-1')
+    const taskId = game.tasks[0].id
+    game.readyTask(taskId)
     game.startRound()
+    game.assignTask('player-1', taskId)
     game.recordAction('player-1')
 
     game.advanceDay()

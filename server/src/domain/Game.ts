@@ -1,6 +1,6 @@
 export type Skill = { name: string; level: number }
 export type Character = { name: string; skills: Skill[] }
-export type Task = { id: string; name: string; requiredSkill: string; remainingEffort: number }
+export type Task = { id: string; name: string; requiredSkill: string; totalEffort: number; remainingEffort: number }
 export type GamePhase = 'lobby' | 'active'
 export type PlayerRole = 'product-owner' | 'developer'
 
@@ -12,12 +12,12 @@ const CHARACTERS: Character[] = [
 ]
 
 const INITIAL_TASKS: Task[] = [
-  { id: 'task-1', name: 'Artist profile API', requiredSkill: 'Backend', remainingEffort: 5 },
-  { id: 'task-2', name: 'Artist profile page', requiredSkill: 'Frontend', remainingEffort: 4 },
-  { id: 'task-3', name: 'Event listing API', requiredSkill: 'Backend', remainingEffort: 4 },
-  { id: 'task-4', name: 'Event listing page', requiredSkill: 'Frontend', remainingEffort: 3 },
-  { id: 'task-5', name: 'Set up CI pipeline', requiredSkill: 'Infrastructure', remainingEffort: 3 },
-  { id: 'task-6', name: 'Security audit', requiredSkill: 'Security', remainingEffort: 4 },
+  { id: 'task-1', name: 'Artist profile API', requiredSkill: 'Backend', totalEffort: 5, remainingEffort: 5 },
+  { id: 'task-2', name: 'Artist profile page', requiredSkill: 'Frontend', totalEffort: 4, remainingEffort: 4 },
+  { id: 'task-3', name: 'Event listing API', requiredSkill: 'Backend', totalEffort: 4, remainingEffort: 4 },
+  { id: 'task-4', name: 'Event listing page', requiredSkill: 'Frontend', totalEffort: 3, remainingEffort: 3 },
+  { id: 'task-5', name: 'Set up CI pipeline', requiredSkill: 'Infrastructure', totalEffort: 3, remainingEffort: 3 },
+  { id: 'task-6', name: 'Security audit', requiredSkill: 'Security', totalEffort: 4, remainingEffort: 4 },
 ]
 
 export class Game {
@@ -26,6 +26,7 @@ export class Game {
   private readonly characters = new Map<string, Character>()
   private readonly roles = new Map<string, PlayerRole>()
   private readonly readyTaskIds = new Set<string>()
+  private readonly doneTaskIds = new Set<string>()
   private readonly assignments = new Map<string, string>()
   private readonly actedToday = new Set<string>()
   private phase: GamePhase = 'lobby'
@@ -56,7 +57,7 @@ export class Game {
   }
 
   getReadyTasks(): Task[] {
-    return this.tasks.filter(t => this.readyTaskIds.has(t.id))
+    return this.tasks.filter(t => this.readyTaskIds.has(t.id) && !this.doneTaskIds.has(t.id))
   }
 
   assignTask(playerId: string, taskId: string): void {
@@ -75,9 +76,23 @@ export class Game {
 
   recordAction(playerId: string): void {
     if (this.phase !== 'active') return
+    if (!this.assignments.has(playerId)) return
     if (this.actedToday.has(playerId)) return
     this.actedToday.add(playerId)
     this.effortCount++
+    const taskId = this.assignments.get(playerId)
+    if (taskId) {
+      const task = this.tasks.find(t => t.id === taskId)
+      if (task && task.remainingEffort > 0) {
+        task.remainingEffort--
+        if (task.remainingEffort === 0) {
+          this.doneTaskIds.add(taskId)
+          for (const [pid, tid] of this.assignments) {
+            if (tid === taskId) this.assignments.delete(pid)
+          }
+        }
+      }
+    }
   }
 
   hasActed(playerId: string): boolean {

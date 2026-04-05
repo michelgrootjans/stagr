@@ -4,7 +4,7 @@
 
   type Skill = { name: string; level: number }
   type Character = { name: string; skills: Skill[] }
-  type Task = { id: string; name: string; requiredSkill: string; remainingEffort: number; ready: boolean }
+  type Task = { id: string; name: string; requiredSkill: string; totalEffort: number; remainingEffort: number; ready: boolean }
   type GamePhase = 'lobby' | 'active'
   type PlayerRole = 'product-owner' | 'developer'
   type PlayerState = { id: string; role: PlayerRole; assignedTaskId?: string; hasActed: boolean; name: string }
@@ -102,7 +102,10 @@
     {#if readyTasks.length > 0}
       <ul class="tasks">
         {#each readyTasks as task}
-          <li class="task ready">✅ {task.name} <span class="skill">({task.requiredSkill})</span></li>
+          <li class="task ready">
+            {task.name} <span class="skill">({task.requiredSkill})</span>
+            <div class="progress-bar"><div class="progress-fill" style="width: {task.remainingEffort / task.totalEffort * 100}%"></div></div>
+          </li>
         {/each}
       </ul>
     {/if}
@@ -133,6 +136,7 @@
               onclick={() => assignTask(task.id)}
             >
               {task.name} <span class="skill">({task.requiredSkill})</span>
+              <div class="progress-bar"><div class="progress-fill" style="width: {task.remainingEffort / task.totalEffort * 100}%"></div></div>
             </button>
           </li>
         {/each}
@@ -163,6 +167,8 @@
   .task-btn.selected { background: #e0f0ff; border-color: #4a90d9; font-weight: bold; }
   .task.ready { font-size: 0.85rem; padding: 4px 0; color: #555; }
   .skill { color: #888; font-size: 0.8rem; }
+  .progress-bar { height: 4px; background: #e0e0e0; border-radius: 2px; margin-top: 4px; }
+  .progress-fill { height: 100%; background: #4a90d9; border-radius: 2px; transition: width 0.3s ease; }
   .assigned-task { font-weight: bold; margin: 8px 0; }
   .tap-btn { margin-top: 8px; padding: 12px 24px; font-size: 1rem; border: none; border-radius: 8px; background: #4a90d9; color: white; cursor: pointer; width: 100%; }
   .tap-btn:disabled { background: #ccc; cursor: default; }
