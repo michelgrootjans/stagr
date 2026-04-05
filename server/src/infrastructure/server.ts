@@ -5,13 +5,11 @@ import sirv from 'sirv'
 import { Server } from 'socket.io'
 import { CreateGameHandler } from '../application/commands/CreateGameHandler'
 import { JoinGameHandler } from '../application/commands/JoinGameHandler'
-import { GetGameHandler } from '../application/queries/GetGameHandler'
 import { InMemoryGameRepository } from './InMemoryGameRepository'
 
 const gameRepository = new InMemoryGameRepository()
 const createGameHandler = new CreateGameHandler(gameRepository)
 const joinGameHandler = new JoinGameHandler(gameRepository)
-const getGameHandler = new GetGameHandler(gameRepository)
 
 const isDev = process.env.NODE_ENV !== 'production'
 const httpServer = isDev
@@ -24,6 +22,23 @@ const httpServer = isDev
 const io = new Server(httpServer, {
   cors: { origin: '*' }
 })
+
+type PlayerRef = { gameId: string; playerId: string }
+const socketToPlayer = new Map<string, PlayerRef>()
+
+type PlayerStatus = { id: string; connected: boolean }
+
+function gameUpdate(gameId: string): { players: PlayerStatus[] } {
+  const game = gameRepository.findById(gameId)
+  const connectedIds = new Set(
+    [...socketToPlayer.values()]
+      .filter(ref => ref.gameId === gameId)
+      .map(ref => ref.playerId)
+  )
+  return {
+    players: (game?.players ?? []).map(id => ({ id, connected: connectedIds.has(id) }))
+  }
+}
 
 io.on('connection', (socket) => {
   console.log(`Client connected: ${socket.id}`)
@@ -38,22 +53,38 @@ io.on('connection', (socket) => {
     const playerId = randomUUID()
     socket.join(gameId)
     joinGameHandler.handle(gameId, playerId)
-    const game = gameRepository.findById(gameId)
-    io.to(gameId).emit('game_updated', { players: game?.players ?? [] })
+    socketToPlayer.set(socket.id, { gameId, playerId })
+    io.to(gameId).emit('game_updated', gameUpdate(gameId))
     console.log(`Player ${playerId} joined game ${gameId}`)
     callback(playerId)
+  })
+
+  socket.on('rejoin_game', ({ gameId, playerId }: { gameId: string; playerId: string }) => {
+    socket.join(gameId)
+    socketToPlayer.set(socket.id, { gameId, playerId })
+    io.to(gameId).emit('game_updated', gameUpdate(gameId))
+    console.log(`Player ${playerId} rejoined game ${gameId}`)
   })
 
   socket.on('watch_game', ({ gameId }: { gameId: string }) => {
     socket.join(gameId)
   })
 
-  socket.on('get_game', ({ gameId }: { gameId: string }, callback: (game: { players: string[] } | undefined) => void) => {
-    callback(getGameHandler.handle(gameId))
+  socket.on('get_game', ({ gameId }: { gameId: string }, callback: (game: { players: PlayerStatus[] } | undefined) => void) => {
+    const game = gameRepository.findById(gameId)
+    if (!game) { callback(undefined); return }
+    callback(gameUpdate(gameId))
   })
 
   socket.on('disconnect', () => {
-    console.log(`Client disconnected: ${socket.id}`)
+    const ref = socketToPlayer.get(socket.id)
+    if (ref) {
+      socketToPlayer.delete(socket.id)
+      io.to(ref.gameId).emit('game_updated', gameUpdate(ref.gameId))
+      console.log(`Player ${ref.playerId} disconnected from game ${ref.gameId}`)
+    } else {
+      console.log(`Client disconnected: ${socket.id}`)
+    }
   })
 })
 

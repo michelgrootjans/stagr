@@ -2,10 +2,9 @@
   import { io, type Socket } from 'socket.io-client'
   import { page } from '$app/stores'
   import { serverUrl } from '$lib/socket'
-  import { onMount, onDestroy } from 'svelte'
+  import { onDestroy } from 'svelte'
 
   const gameId = $page.params.gameId
-  const PLAYER_COUNT = 3
 
   type PlayerPanel = {
     socket: Socket
@@ -15,25 +14,25 @@
 
   let panels = $state<PlayerPanel[]>([])
 
-  onMount(() => {
-    panels = Array.from({ length: PLAYER_COUNT }, () => ({
-      socket: io(serverUrl, { forceNew: true }),
-      playerId: null,
-      connected: false
-    }))
+  function addPlayer() {
+    const socket = io(serverUrl, { forceNew: true })
+    const index = panels.length
+    panels = [...panels, { socket, playerId: null, connected: false }]
 
-    panels.forEach((panel, i) => {
-      panel.socket.on('connect', () => {
-        panels[i].connected = true
-        panels[i].socket.emit('join_game', { gameId }, (playerId: string) => {
-          panels[i].playerId = playerId
+    socket.on('connect', () => {
+      panels[index].connected = true
+      if (!panels[index].playerId) {
+        socket.emit('join_game', { gameId }, (playerId: string) => {
+          panels[index].playerId = playerId
         })
-      })
-      panel.socket.on('disconnect', () => {
-        panels[i].connected = false
-      })
+      } else {
+        socket.emit('rejoin_game', { gameId, playerId: panels[index].playerId })
+      }
     })
-  })
+    socket.on('disconnect', () => {
+      panels[index].connected = false
+    })
+  }
 
   onDestroy(() => {
     panels.forEach(p => p.socket.disconnect())
@@ -44,7 +43,7 @@
   <header>
     <h1>Dev screen</h1>
     <p>Game: {gameId}</p>
-    <button disabled>Roll all</button>
+    <button onclick={addPlayer}>Add player</button>
   </header>
 
   <div class="panels">
@@ -53,6 +52,10 @@
         <h2>Player {i + 1}</h2>
         <p>{panel.connected ? '🟢 connected' : '🔴 disconnected'}</p>
         <p class="player-id">{panel.playerId ?? '...'}</p>
+        <div class="actions">
+          <button onclick={() => panel.socket.disconnect()} disabled={!panel.connected}>Disconnect</button>
+          <button onclick={() => panel.socket.connect()} disabled={panel.connected}>Reconnect</button>
+        </div>
       </div>
     {/each}
   </div>
@@ -70,4 +73,5 @@
   h2 { margin: 0 0 8px; }
   p { margin: 4px 0; }
   .player-id { font-size: 11px; color: #999; word-break: break-all; }
+  .actions { display: flex; gap: 8px; margin-top: 8px; }
 </style>

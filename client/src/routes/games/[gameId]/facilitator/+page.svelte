@@ -3,14 +3,16 @@
   import { page } from '$app/stores'
   import { socket } from '$lib/socket'
 
+  type Player = { id: string; connected: boolean }
+
   const gameId = $page.params.gameId
 
   let connected = $state(false)
-  let players = $state<string[]>([])
+  let players = $state<Player[]>([])
 
   function watchGame() {
     socket.emit('watch_game', { gameId })
-    socket.emit('get_game', { gameId }, (game: { players: string[] } | undefined) => {
+    socket.emit('get_game', { gameId }, (game: { players: Player[] } | undefined) => {
       if (game) players = game.players
     })
   }
@@ -24,7 +26,7 @@
       watchGame()
     })
     socket.on('disconnect', () => { connected = false })
-    socket.on('game_updated', (game: { players: string[] }) => {
+    socket.on('game_updated', (game: { players: Player[] }) => {
       players = game.players
     })
   })
@@ -47,7 +49,7 @@
   {:else}
     <ul>
       {#each players as player}
-        <li>{player}</li>
+        <li>{player.connected ? '🟢' : '🔴'} {player.id}</li>
       {/each}
     </ul>
   {/if}
