@@ -129,9 +129,9 @@ client/src/
   routes/
     games/[gameId]/
       facilitator/   ← /games/:gameId/facilitator
+      dev/           ← /games/:gameId/dev
     play/[sessionId] ← /play/:sessionId
     join/[sessionId] ← /join/:sessionId
-    dev/             ← /dev
   lib/
     components/      ← Svelte components, pure display
     stores/          ← Reactive game state, updated from socket events

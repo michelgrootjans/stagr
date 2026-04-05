@@ -1,6 +1,9 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte'
+  import { page } from '$app/stores'
   import { socket } from '$lib/socket'
+
+  const gameId = $page.params.gameId
 
   let connected = $state(false)
 
@@ -20,4 +23,5 @@
   <h1>Stagr</h1>
   <p>Facilitator screen</p>
   <p>Server: {connected ? '🟢 connected' : '🔴 disconnected'}</p>
+  <a href="/games/{gameId}/dev">Dev</a>
 </main>

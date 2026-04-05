@@ -1,9 +1,10 @@
 <script lang="ts">
   import { io, type Socket } from 'socket.io-client'
+  import { page } from '$app/stores'
   import { serverUrl } from '$lib/socket'
   import { onMount, onDestroy } from 'svelte'
 
-  const GAME_ID = 'dev-game'
+  const gameId = $page.params.gameId
   const PLAYER_COUNT = 3
 
   type PlayerPanel = {
@@ -24,7 +25,7 @@
     panels.forEach((panel, i) => {
       panel.socket.on('connect', () => {
         panels[i].connected = true
-        panels[i].socket.emit('join_game', { gameId: GAME_ID }, (playerId: string) => {
+        panels[i].socket.emit('join_game', { gameId }, (playerId: string) => {
           panels[i].playerId = playerId
         })
       })
@@ -42,7 +43,7 @@
 <main>
   <header>
     <h1>Dev screen</h1>
-    <p>Game: {GAME_ID}</p>
+    <p>Game: {gameId}</p>
     <button disabled>Roll all</button>
   </header>
 

@@ -21,7 +21,7 @@
 |---|---|
 | `/games/:gameId/facilitator` | Facilitator screen — Kanban board, metrics, character panel |
 | `/play/:sessionId` | Player view on mobile — character, dice, current task |
-| `/dev` | Solo/dev mode — simulated player panels + mass actions |
+| `/games/:gameId/dev` | Solo/dev mode — simulated player panels + mass actions |
 | `/join/:sessionId` | Landing page after scanning QR code |
 
 ## Scaling

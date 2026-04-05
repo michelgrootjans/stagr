@@ -64,4 +64,4 @@ Always update `current.md` when a task is completed — move it to Done without 
 | `/games/:gameId/facilitator` | Facilitator screen |
 | `/games/:gameId/join` | Entry point (QR code target), redirects to player screen |
 | `/players/:playerId` | Player's personal screen |
-| `/dev` | Dev mode — simulated player panels |
+| `/games/:gameId/dev` | Dev mode — simulated player panels |
