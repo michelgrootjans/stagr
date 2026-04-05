@@ -3,7 +3,7 @@
   import { page } from '$app/stores'
   import { socket } from '$lib/socket'
 
-  type Player = { id: string; connected: boolean }
+  type Player = { id: string; name: string; connected: boolean }
 
   const gameId = $page.params.gameId
 
@@ -49,7 +49,7 @@
   {:else}
     <ul>
       {#each players as player}
-        <li>{player.connected ? '🟢' : '🔴'} {player.id}</li>
+        <li>{player.connected ? '🟢' : '🔴'} {player.name}</li>
       {/each}
     </ul>
   {/if}

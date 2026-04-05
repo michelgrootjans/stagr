@@ -15,7 +15,12 @@ describe('GetGameHandler', () => {
 
     const result = new GetGameHandler(repository).handle('game-1')
 
-    expect(result).toEqual({ players: ['player-1', 'player-2'] })
+    expect(result).toEqual({
+      players: [
+        { id: 'player-1', name: 'Alice' },
+        { id: 'player-2', name: 'Bob' },
+      ]
+    })
   })
 
   it('returns undefined when the game does not exist', () => {

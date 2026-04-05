@@ -27,7 +27,7 @@ const io = new Server(httpServer, {
 type PlayerRef = { gameId: string; playerId: string }
 const socketToPlayer = new Map<string, PlayerRef>()
 
-type PlayerStatus = { id: string; connected: boolean }
+type PlayerStatus = { id: string; name: string; connected: boolean }
 
 function gameUpdate(gameId: string): { players: PlayerStatus[] } {
   const game = gameRepository.findById(gameId)
@@ -37,7 +37,11 @@ function gameUpdate(gameId: string): { players: PlayerStatus[] } {
       .map(ref => ref.playerId)
   )
   return {
-    players: (game?.players ?? []).map(id => ({ id, connected: connectedIds.has(id) }))
+    players: (game?.players ?? []).map(id => ({
+      id,
+      name: game?.getCharacter(id)?.name ?? id,
+      connected: connectedIds.has(id),
+    }))
   }
 }
 
