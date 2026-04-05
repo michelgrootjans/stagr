@@ -7,4 +7,14 @@ describe('Game', () => {
     game.addPlayer('player-1')
     expect(game.getCharacter('player-1')).toBeDefined()
   })
+
+  it('tracks effort applied to work', () => {
+    const game = new Game('game-1')
+    game.addPlayer('player-1')
+
+    game.recordAction()
+    game.recordAction()
+
+    expect(game.getEffortCount()).toBe(2)
+  })
 })

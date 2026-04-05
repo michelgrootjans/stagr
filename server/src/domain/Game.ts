@@ -11,6 +11,7 @@ const CHARACTERS: Character[] = [
 export class Game {
   readonly players: string[] = []
   private readonly characters = new Map<string, Character>()
+  private effortCount = 0
 
   constructor(readonly id: string) {}
 
@@ -21,5 +22,13 @@ export class Game {
 
   getCharacter(playerId: string): Character | undefined {
     return this.characters.get(playerId)
+  }
+
+  recordAction(): void {
+    this.effortCount++
+  }
+
+  getEffortCount(): number {
+    return this.effortCount
   }
 }

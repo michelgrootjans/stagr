@@ -6,6 +6,7 @@ export interface PlayerView {
 }
 
 export interface GameView {
+  effortCount: number
   players: PlayerView[]
 }
 
@@ -16,6 +17,7 @@ export class GetGameHandler {
     const game = this.repository.findById(gameId)
     if (!game) return undefined
     return {
+      effortCount: game.getEffortCount(),
       players: game.players.map(id => ({
         id,
         name: game.getCharacter(id)?.name ?? id,

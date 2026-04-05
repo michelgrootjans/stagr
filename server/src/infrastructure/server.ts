@@ -6,6 +6,7 @@ import { Server } from 'socket.io'
 import { createCommandBus } from '../application/createCommandBus'
 import { CreateGame } from '../application/commands/CreateGame'
 import { JoinGame } from '../application/commands/JoinGame'
+import { RecordAction } from '../application/commands/RecordAction'
 import type { Character } from '../domain/Game'
 import { InMemoryGameRepository } from './InMemoryGameRepository'
 
@@ -29,7 +30,7 @@ const socketToPlayer = new Map<string, PlayerRef>()
 
 type PlayerStatus = { id: string; name: string; connected: boolean }
 
-function gameUpdate(gameId: string): { players: PlayerStatus[] } {
+function gameUpdate(gameId: string): { effortCount: number; players: PlayerStatus[] } {
   const game = gameRepository.findById(gameId)
   const connectedIds = new Set(
     [...socketToPlayer.values()]
@@ -37,6 +38,7 @@ function gameUpdate(gameId: string): { players: PlayerStatus[] } {
       .map(ref => ref.playerId)
   )
   return {
+    effortCount: game?.getEffortCount() ?? 0,
     players: (game?.players ?? []).map(id => ({
       id,
       name: game?.getCharacter(id)?.name ?? id,
@@ -70,6 +72,13 @@ io.on('connection', (socket) => {
     socketToPlayer.set(socket.id, { gameId, playerId })
     io.to(gameId).emit('game_updated', gameUpdate(gameId))
     console.log(`Player ${playerId} rejoined game ${gameId}`)
+  })
+
+  socket.on('player_action', () => {
+    const ref = socketToPlayer.get(socket.id)
+    if (!ref) return
+    bus.execute(new RecordAction(ref.gameId, ref.playerId))
+    io.to(ref.gameId).emit('game_updated', gameUpdate(ref.gameId))
   })
 
   socket.on('watch_game', ({ gameId }: { gameId: string }) => {

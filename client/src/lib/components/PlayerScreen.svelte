@@ -9,6 +9,10 @@
 
   let connected = $state(socket.connected)
 
+  function tap() {
+    socket.emit('player_action')
+  }
+
   onMount(() => {
     socket.on('connect', () => { connected = true })
     socket.on('disconnect', () => { connected = false })
@@ -32,6 +36,7 @@
   {:else}
     <p>Player: {playerId}</p>
   {/if}
+  <button onclick={tap}>Tap</button>
   <p class="status">{connected ? '🟢 connected' : '🔴 disconnected'}</p>
 </div>
 

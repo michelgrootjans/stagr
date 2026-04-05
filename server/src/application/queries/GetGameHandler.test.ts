@@ -16,6 +16,7 @@ describe('GetGameHandler', () => {
     const result = new GetGameHandler(repository).handle('game-1')
 
     expect(result).toEqual({
+      effortCount: 0,
       players: [
         { id: 'player-1', name: 'Alice' },
         { id: 'player-2', name: 'Bob' },
