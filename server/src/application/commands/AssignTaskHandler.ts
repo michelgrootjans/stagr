@@ -1,13 +1,13 @@
 import type { GameRepository } from '../ports/GameRepository'
-import type { RecordAction } from './RecordAction'
+import type { AssignTask } from './AssignTask'
 
-export class RecordActionHandler {
+export class AssignTaskHandler {
   constructor(private readonly repository: GameRepository) {}
 
-  handle(command: RecordAction): void {
+  handle(command: AssignTask): void {
     const game = this.repository.findById(command.gameId)
     if (!game) return
-    game.recordAction(command.playerId)
+    game.assignTask(command.playerId, command.taskId)
     this.repository.save(game)
   }
 }

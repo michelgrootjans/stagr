@@ -1,13 +1,13 @@
 import type { GameRepository } from '../ports/GameRepository'
-import type { RecordAction } from './RecordAction'
+import type { StartWork } from './StartWork'
 
-export class RecordActionHandler {
+export class StartWorkHandler {
   constructor(private readonly repository: GameRepository) {}
 
-  handle(command: RecordAction): void {
+  handle(command: StartWork): void {
     const game = this.repository.findById(command.gameId)
     if (!game) return
-    game.recordAction(command.playerId)
+    game.startWork()
     this.repository.save(game)
   }
 }

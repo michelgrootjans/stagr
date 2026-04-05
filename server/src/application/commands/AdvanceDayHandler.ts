@@ -1,13 +1,13 @@
 import type { GameRepository } from '../ports/GameRepository'
-import type { RecordAction } from './RecordAction'
+import type { AdvanceDay } from './AdvanceDay'
 
-export class RecordActionHandler {
+export class AdvanceDayHandler {
   constructor(private readonly repository: GameRepository) {}
 
-  handle(command: RecordAction): void {
+  handle(command: AdvanceDay): void {
     const game = this.repository.findById(command.gameId)
     if (!game) return
-    game.recordAction(command.playerId)
+    game.advanceDay()
     this.repository.save(game)
   }
 }

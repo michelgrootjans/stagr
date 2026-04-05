@@ -6,7 +6,7 @@ import { InMemoryGameRepository } from '../../infrastructure/InMemoryGameReposit
 import { createCommandBus } from '../createCommandBus'
 
 describe('GetGameHandler', () => {
-  it('returns the current state of the game', () => {
+  it('returns phase, tasks, and players', () => {
     const repository = new InMemoryGameRepository()
     const bus = createCommandBus(repository)
     bus.execute(new CreateGame('game-1'))
@@ -15,13 +15,13 @@ describe('GetGameHandler', () => {
 
     const result = new GetGameHandler(repository).handle('game-1')
 
-    expect(result).toEqual({
-      effortCount: 0,
-      players: [
-        { id: 'player-1', name: 'Alice' },
-        { id: 'player-2', name: 'Bob' },
-      ]
-    })
+    expect(result?.phase).toBe('standup')
+    expect(result?.effortCount).toBe(0)
+    expect(result?.tasks.length).toBeGreaterThan(0)
+    expect(result?.players).toEqual([
+      { id: 'player-1', name: 'Alice', assignedTaskId: undefined, hasActed: false },
+      { id: 'player-2', name: 'Bob', assignedTaskId: undefined, hasActed: false },
+    ])
   })
 
   it('returns undefined when the game does not exist', () => {
